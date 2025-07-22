@@ -1,0 +1,50 @@
+# Files and directories to exclude from deployment
+
+# Development files
+.git/
+.gitignore
+.deployignore
+deploy.sh
+README.md
+CONTRIBUTING.md
+CHANGELOG.md
+
+# Development dependencies
+node_modules/
+vendor/
+package.json
+package-lock.json
+composer.json
+composer.lock
+
+# Build tools
+webpack.config.js
+gulpfile.js
+Gruntfile.js
+
+# Testing
+tests/
+phpunit.xml
+.phpunit.result.cache
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# GitHub
+.github/
+
+# Local config
+.env
+.env.local
+
+# Temporary files
+*.log
+*.tmp
+.deploy/
