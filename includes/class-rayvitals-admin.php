@@ -31,6 +31,9 @@ class RayVitals_Admin {
         add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
         add_action('admin_notices', array($this, 'admin_notices'));
         add_filter('admin_body_class', array($this, 'admin_body_class'));
+        
+        // AJAX handlers for API key generation
+        add_action('wp_ajax_rayvitals_generate_api_key', array($this, 'ajax_generate_api_key'));
     }
     
     /**
@@ -159,39 +162,95 @@ class RayVitals_Admin {
      * Render settings page
      */
     public static function render_settings() {
-        // Handle form submission
-        if (isset($_POST['rayvitals_save_settings']) && check_admin_referer('rayvitals_settings')) {
-            $api_key = sanitize_text_field($_POST['rayvitals_api_key']);
-            
-            // Validate API key if provided
-            if (!empty($api_key)) {
-                $api = new RayVitals_API();
-                $validation = $api->validate_api_key($api_key);
-                
-                if (is_wp_error($validation)) {
-                    add_settings_error(
-                        'rayvitals_settings',
-                        'invalid_api_key',
-                        __('Invalid API key. Please check your key and try again.', 'rayvitals')
-                    );
-                } else {
-                    update_option('rayvitals_api_key', $api_key);
-                    add_settings_error(
-                        'rayvitals_settings',
-                        'settings_saved',
-                        __('Settings saved successfully.', 'rayvitals'),
-                        'success'
-                    );
-                }
-            } else {
-                update_option('rayvitals_api_key', '');
-            }
-            
-            // Save other settings
-            update_option('rayvitals_enable_caching', !empty($_POST['rayvitals_enable_caching']));
-            update_option('rayvitals_cache_duration', absint($_POST['rayvitals_cache_duration']));
+        include RAYVITALS_PLUGIN_DIR . 'admin/views/settings.php';
+    }
+    
+    /**
+     * AJAX handler for generating API keys
+     */
+    public function ajax_generate_api_key() {
+        error_log('RayVitals WP: Starting API key generation');
+        
+        // Verify nonce
+        if (!wp_verify_nonce($_POST['nonce'], 'rayvitals_generate_api_key')) {
+            error_log('RayVitals WP: Nonce verification failed');
+            wp_send_json_error(array('message' => __('Security check failed', 'rayvitals')));
         }
         
-        include RAYVITALS_PLUGIN_DIR . 'admin/views/settings.php';
+        // Check user capabilities
+        if (!current_user_can('manage_options')) {
+            error_log('RayVitals WP: User lacks manage_options capability');
+            wp_send_json_error(array('message' => __('Insufficient permissions', 'rayvitals')));
+        }
+        
+        try {
+            // Call admin endpoint to generate API key
+            $admin_token = defined('RAYVITALS_ADMIN_TOKEN') ? RAYVITALS_ADMIN_TOKEN : 'your-secret-admin-token-here';
+            $api_url = RAYVITALS_API_URL . '/api/admin/api-keys';
+            
+            error_log('RayVitals WP: Admin token defined: ' . (defined('RAYVITALS_ADMIN_TOKEN') ? 'YES' : 'NO'));
+            error_log('RayVitals WP: Admin token length: ' . strlen($admin_token));
+            error_log('RayVitals WP: API URL: ' . $api_url);
+            
+            $request_body = json_encode(array(
+                'key_name' => 'WordPress Plugin - ' . get_bloginfo('name'),
+                'rate_limit' => 120,
+                'monthly_limit' => 10000
+            ));
+            
+            error_log('RayVitals WP: Request body: ' . $request_body);
+            
+            $response = wp_remote_post($api_url, array(
+                'headers' => array(
+                    'Authorization' => 'Bearer ' . $admin_token,
+                    'Content-Type' => 'application/json'
+                ),
+                'body' => $request_body,
+                'timeout' => 30
+            ));
+            
+            error_log('RayVitals WP: Raw response: ' . print_r($response, true));
+            
+            if (is_wp_error($response)) {
+                error_log('RayVitals WP: WP Error: ' . $response->get_error_message());
+                wp_send_json_error(array('message' => __('Failed to connect to RayVitals API: ', 'rayvitals') . $response->get_error_message()));
+            }
+            
+            $response_code = wp_remote_retrieve_response_code($response);
+            $response_body = wp_remote_retrieve_body($response);
+            
+            error_log('RayVitals WP: Response code: ' . $response_code);
+            error_log('RayVitals WP: Response body: ' . $response_body);
+            
+            if ($response_code !== 200) {
+                error_log('RayVitals WP: Non-200 response code: ' . $response_code);
+                $error_data = json_decode($response_body, true);
+                error_log('RayVitals WP: Error data: ' . print_r($error_data, true));
+                $error_message = isset($error_data['detail']) ? $error_data['detail'] : __('Unknown API error', 'rayvitals');
+                wp_send_json_error(array('message' => $error_message));
+            }
+            
+            $api_key_data = json_decode($response_body, true);
+            error_log('RayVitals WP: Decoded API key data: ' . print_r($api_key_data, true));
+            
+            if (!isset($api_key_data['api_key'])) {
+                error_log('RayVitals WP: No api_key in response');
+                wp_send_json_error(array('message' => __('Invalid API response', 'rayvitals')));
+            }
+            
+            error_log('RayVitals WP: Successfully generated API key');
+            
+            // Return the generated API key
+            wp_send_json_success(array(
+                'api_key' => $api_key_data['api_key'],
+                'key_name' => $api_key_data['key_name'],
+                'rate_limit' => $api_key_data['rate_limit'],
+                'monthly_limit' => $api_key_data['monthly_limit']
+            ));
+            
+        } catch (Exception $e) {
+            error_log('RayVitals WP: Exception caught: ' . $e->getMessage());
+            wp_send_json_error(array('message' => __('Error generating API key: ', 'rayvitals') . $e->getMessage()));
+        }
     }
 }
