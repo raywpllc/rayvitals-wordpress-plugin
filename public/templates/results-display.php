@@ -245,8 +245,8 @@ function get_dynamic_description($score, $category_key) {
                     }
                     ?>
                     <?php
-                    // Quick Wins button integrated into AI Summary card
-                    if (!empty($detailed_results['quick_wins'])): ?>
+                    // Quick Wins button integrated into AI Summary card - TEMPORARILY DISABLED
+                    if (false && !empty($detailed_results['quick_wins'])): ?>
                         <div class="quick-wins-section" style="margin-top: 1rem;">
                             <button class="quick-wins-button" onclick="openQuickWinsModal()">
                                 <svg class="icon-white" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -488,24 +488,7 @@ function get_dynamic_description($score, $category_key) {
     </div>
 </div>
 
-<!-- Quick Wins Modal -->
-<div class="rayvitals-modal" id="quick-wins-modal" style="display: none;">
-    <div class="modal-overlay"></div>
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 class="modal-title"><?php _e('Quick Wins - High Impact Improvements', 'rayvitals'); ?></h3>
-            <button class="modal-close">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="quick-wins-intro">
-                <p><?php _e('Focus on these high-impact, low-effort improvements to see immediate results for your website.', 'rayvitals'); ?></p>
-            </div>
-            <div class="quick-wins-grid" id="quick-wins-list">
-                <!-- Quick wins will be populated by JavaScript -->
-            </div>
-        </div>
-    </div>
-</div>
+<!-- Quick Wins Modal - TEMPORARILY REMOVED FOR DEBUGGING -->
 
 <script>
 // Add modal and interactive functionality
@@ -601,58 +584,8 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Quick Wins Modal functionality (simplified safe implementation)
+// Quick Wins Modal functionality - COMPLETELY DISABLED FOR DEBUGGING
 function openQuickWinsModal() {
-    var $ = jQuery;
-    
-    // Get data from hidden script tag
-    var quickWinsDataElement = document.getElementById('quick-wins-data');
-    if (!quickWinsDataElement) {
-        alert('No quick wins data available.');
-        return;
-    }
-    
-    var quickWinsData;
-    try {
-        quickWinsData = JSON.parse(quickWinsDataElement.textContent);
-    } catch (e) {
-        alert('Error loading quick wins data.');
-        return;
-    }
-    
-    if (!quickWinsData || quickWinsData.length === 0) {
-        alert('No quick wins available for this audit.');
-        return;
-    }
-    
-    // Clear previous content
-    $('#quick-wins-list').empty();
-    
-    // Populate quick wins
-    quickWinsData.forEach(function(quickWin) {
-        var categoryClass = quickWin.category.toLowerCase().replace(/\s+/g, '');
-        
-        var cardHtml = '<div class="quick-win-item">' +
-            '<div class="quick-win-header">' +
-                '<span class="category-badge ' + categoryClass + '">' + escapeHtml(quickWin.category) + '</span>' +
-                '<span class="time-estimate">' + escapeHtml(quickWin.time_estimate) + '</span>' +
-            '</div>' +
-            '<h4>' + escapeHtml(quickWin.action) + '</h4>' +
-            '<p><strong>Impact:</strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
-            '<p><strong>Revenue:</strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
-            '<details>' +
-                '<summary>Implementation Steps</summary>' +
-                '<div class="implementation-content">' +
-                    '<p>' + escapeHtml(quickWin.implementation) + '</p>' +
-                    '<p><strong>How to verify:</strong> ' + escapeHtml(quickWin.verification) + '</p>' +
-                '</div>' +
-            '</details>' +
-        '</div>';
-        
-        $('#quick-wins-list').append(cardHtml);
-    });
-    
-    // Show modal
-    $('#quick-wins-modal').fadeIn();
+    alert('Quick Wins temporarily disabled');
 }
 </script>
