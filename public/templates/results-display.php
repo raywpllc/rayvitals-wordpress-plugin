@@ -244,8 +244,6 @@ function get_dynamic_description($score, $category_key) {
                         echo '<div class="ai-summary-fallback">' . wp_kses_post($ai_summary) . '</div>';
                     }
                     ?>
-                </div>
-            </div>
                     <?php
                     // Quick Wins button integrated into AI Summary card
                     if (!empty($detailed_results['quick_wins'])): ?>
@@ -618,37 +616,22 @@ function openQuickWinsModal() {
         quickWinsData.forEach(function(quickWin) {
             var categoryClass = quickWin.category.toLowerCase().replace(/\s+/g, '');
             
-            var cardHtml = `
-                <div class="quick-win-card">
-                    <div class="quick-win-header">
-                        <span class="quick-win-category ${categoryClass}">${escapeHtml(quickWin.category)}</span>
-                        <div class="quick-win-meta">
-                            <span class="quick-win-time">⏱️ ${escapeHtml(quickWin.time_estimate)}</span>
-                            <span class="quick-win-difficulty">${escapeHtml(quickWin.difficulty)}</span>
-                        </div>
-                    </div>
-                    
-                    <h4 class="quick-win-title">${escapeHtml(quickWin.action)}</h4>
-                    
-                    <div class="quick-win-impact">
-                        <strong><?php _e('Business Impact:', 'rayvitals'); ?></strong> ${escapeHtml(quickWin.business_impact)}
-                    </div>
-                    
-                    <div class="quick-win-revenue">
-                        💰 <strong><?php _e('Revenue Impact:', 'rayvitals'); ?></strong> ${escapeHtml(quickWin.revenue_impact)}
-                    </div>
-                    
-                    <div class="quick-win-implementation">
-                        <div class="quick-win-implementation-title"><?php _e('How to Implement:', 'rayvitals'); ?></div>
-                        <div class="quick-win-implementation-steps">${escapeHtml(quickWin.implementation)}</div>
-                    </div>
-                    
-                    <div class="quick-win-verification">
-                        <div class="quick-win-verification-title"><?php _e('How to Verify:', 'rayvitals'); ?></div>
-                        <div class="quick-win-verification-text">${escapeHtml(quickWin.verification)}</div>
-                    </div>
-                </div>
-            `;
+            var cardHtml = '<div class="quick-win-item">' +
+                '<div class="quick-win-header">' +
+                    '<span class="category-badge ' + categoryClass + '">' + escapeHtml(quickWin.category) + '</span>' +
+                    '<span class="time-estimate">' + escapeHtml(quickWin.time_estimate) + '</span>' +
+                '</div>' +
+                '<h4>' + escapeHtml(quickWin.action) + '</h4>' +
+                '<p><strong><?php _e('Impact:', 'rayvitals'); ?></strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
+                '<p><strong><?php _e('Revenue:', 'rayvitals'); ?></strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
+                '<details>' +
+                    '<summary><?php _e('Implementation Steps', 'rayvitals'); ?></summary>' +
+                    '<div class="implementation-content">' +
+                        '<p>' + escapeHtml(quickWin.implementation) + '</p>' +
+                        '<p><strong><?php _e('How to verify:', 'rayvitals'); ?></strong> ' + escapeHtml(quickWin.verification) + '</p>' +
+                    '</div>' +
+                '</details>' +
+            '</div>';
             
             $('#quick-wins-list').append(cardHtml);
         });

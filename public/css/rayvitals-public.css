@@ -1347,122 +1347,124 @@ h3.card-title {
     font-weight: 400;
 }
 
-/* Quick Wins Modal */
+/* Quick Wins Modal - matching existing modal styles */
+#quick-wins-modal .modal-content {
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#quick-wins-modal .modal-body {
+    overflow-y: auto;
+    max-height: calc(80vh - 120px);
+}
+
 .quick-wins-intro {
-    background: #f8fafc;
-    border-radius: 8px;
+    background: #f8f9fa;
     padding: 1rem;
-    margin-bottom: 1.5rem;
-    border-left: 4px solid #10b981;
+    margin-bottom: 1rem;
+    border-radius: 8px;
 }
 
 .quick-wins-intro p {
     margin: 0;
-    color: #64748b;
+    color: #666;
     font-size: 0.95rem;
 }
 
-.quick-wins-grid {
-    display: grid;
-    gap: 1.5rem;
+#quick-wins-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
 
-.quick-win-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
+.quick-win-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
     padding: 1.5rem;
-    transition: all 0.3s ease;
+    background: #fff;
 }
 
-.quick-win-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+.quick-win-item:hover {
     border-color: #10b981;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .quick-win-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
 }
 
-.quick-win-category {
-    background: #10b981;
-    color: white;
+.category-badge {
+    display: inline-block;
     padding: 0.25rem 0.75rem;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: white;
+    background: #6b7280;
 }
 
-.quick-win-category.security { background: #dc2626; }
-.quick-win-category.performance { background: #ea580c; }
-.quick-win-category.seo { background: #7c3aed; }
-.quick-win-category.accessibility { background: #0369a1; }
-.quick-win-category.ux { background: #059669; }
+.category-badge.security { background: #dc2626; }
+.category-badge.performance { background: #ea580c; }
+.category-badge.seo { background: #7c3aed; }
+.category-badge.accessibility { background: #0369a1; }
+.category-badge.userexperience { background: #059669; }
 
-.quick-win-meta {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.quick-win-time,
-.quick-win-difficulty {
-    background: #f1f5f9;
-    color: #475569;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.quick-win-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #1e293b;
-    margin: 0 0 0.75rem 0;
-    line-height: 1.4;
-}
-
-.quick-win-impact {
-    color: #64748b;
-    font-size: 0.9rem;
-    margin-bottom: 0.75rem;
-    line-height: 1.5;
-}
-
-.quick-win-revenue {
-    background: #fef3c7;
-    color: #92400e;
-    padding: 0.75rem;
-    border-radius: 6px;
+.time-estimate {
     font-size: 0.85rem;
+    color: #6b7280;
+}
+
+.quick-win-item h4 {
+    font-size: 1.1rem;
+    margin: 0 0 0.75rem 0;
+    color: #374151;
+}
+
+.quick-win-item p {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+    color: #4b5563;
+}
+
+.quick-win-item p strong {
+    color: #374151;
+}
+
+.quick-win-item details {
+    margin-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1rem;
+}
+
+.quick-win-item summary {
+    cursor: pointer;
+    color: #6366f1;
     font-weight: 500;
-    margin-bottom: 1rem;
-    border-left: 3px solid #f59e0b;
+    list-style: none;
 }
 
-.quick-win-implementation {
-    background: #f0f9ff;
-    padding: 1rem;
-    border-radius: 6px;
-    margin-bottom: 1rem;
+.quick-win-item summary::-webkit-details-marker {
+    display: none;
 }
 
-.quick-win-implementation-title {
-    font-weight: 600;
-    color: #0369a1;
+.quick-win-item details[open] summary {
     margin-bottom: 0.5rem;
-    font-size: 0.9rem;
 }
 
-.quick-win-implementation-steps {
-    color: #64748b;
+.implementation-content {
+    padding: 0.5rem 0;
+    color: #6b7280;
+}
+
+.implementation-content p {
+    margin: 0.5rem 0;
+}
     font-size: 0.85rem;
     line-height: 1.5;
 }
