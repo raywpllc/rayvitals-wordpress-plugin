@@ -489,14 +489,7 @@ function get_dynamic_description($score, $category_key) {
 </div>
 
 <!-- Quick Wins Modal -->
-<div class="rayvitals-modal" id="quick-wins-modal" style="display: none;" 
-     data-labels='<?php echo json_encode([
-         "impact" => __("Impact:", "rayvitals"),
-         "revenue" => __("Revenue:", "rayvitals"), 
-         "implementation" => __("Implementation Steps", "rayvitals"),
-         "verify" => __("How to verify:", "rayvitals"),
-         "no_quick_wins" => __("No quick wins available for this audit.", "rayvitals")
-     ]); ?>'>
+<div class="rayvitals-modal" id="quick-wins-modal" style="display: none;">
     <div class="modal-overlay"></div>
     <div class="modal-content">
         <div class="modal-header">
@@ -608,7 +601,7 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Quick Wins Modal functionality (safe implementation)
+// Quick Wins Modal functionality (simplified safe implementation)
 function openQuickWinsModal() {
     var $ = jQuery;
     
@@ -619,14 +612,16 @@ function openQuickWinsModal() {
         return;
     }
     
-    // Get labels from modal data attribute
-    var modal = document.getElementById('quick-wins-modal');
-    var labels = JSON.parse(modal.getAttribute('data-labels'));
-    
-    var quickWinsData = JSON.parse(quickWinsDataElement.textContent);
+    var quickWinsData;
+    try {
+        quickWinsData = JSON.parse(quickWinsDataElement.textContent);
+    } catch (e) {
+        alert('Error loading quick wins data.');
+        return;
+    }
     
     if (!quickWinsData || quickWinsData.length === 0) {
-        alert(labels.no_quick_wins);
+        alert('No quick wins available for this audit.');
         return;
     }
     
@@ -643,13 +638,13 @@ function openQuickWinsModal() {
                 '<span class="time-estimate">' + escapeHtml(quickWin.time_estimate) + '</span>' +
             '</div>' +
             '<h4>' + escapeHtml(quickWin.action) + '</h4>' +
-            '<p><strong>' + labels.impact + '</strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
-            '<p><strong>' + labels.revenue + '</strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
+            '<p><strong>Impact:</strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
+            '<p><strong>Revenue:</strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
             '<details>' +
-                '<summary>' + labels.implementation + '</summary>' +
+                '<summary>Implementation Steps</summary>' +
                 '<div class="implementation-content">' +
                     '<p>' + escapeHtml(quickWin.implementation) + '</p>' +
-                    '<p><strong>' + labels.verify + '</strong> ' + escapeHtml(quickWin.verification) + '</p>' +
+                    '<p><strong>How to verify:</strong> ' + escapeHtml(quickWin.verification) + '</p>' +
                 '</div>' +
             '</details>' +
         '</div>';
