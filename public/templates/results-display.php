@@ -208,20 +208,11 @@ function get_score_label($score) {
                     <div class="performance-label"><?php echo get_score_label($overall_score); ?></div>
                 </div>
             </div>
-            <div class="performance-breakdown">
-                <div class="breakdown-item">
-                    <span class="label"><?php _e('Performance', 'rayvitals'); ?></span>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 85%;"></div>
-                    </div>
-                    <span class="percentage">85%</span>
-                </div>
-                <?php if ($overall_percentile): ?>
-                <div class="overall-benchmarking">
-                    <?php echo esc_html($overall_percentile); ?>
-                </div>
-                <?php endif; ?>
+            <?php if ($overall_percentile): ?>
+            <div class="overall-benchmarking">
+                <?php echo esc_html($overall_percentile); ?>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 
