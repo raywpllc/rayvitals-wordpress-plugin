@@ -599,44 +599,8 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Quick Wins Modal functionality (outside jQuery for global access)
+// Quick Wins Modal functionality (temporarily disabled for debugging)
 function openQuickWinsModal() {
-        var $ = jQuery;
-        var quickWinsData = <?php echo json_encode($detailed_results['quick_wins'] ?? []); ?>;
-        
-        if (!quickWinsData || quickWinsData.length === 0) {
-            alert('<?php _e("No quick wins available for this audit.", "rayvitals"); ?>');
-            return;
-        }
-        
-        // Clear previous content
-        $('#quick-wins-list').empty();
-        
-        // Populate quick wins
-        quickWinsData.forEach(function(quickWin) {
-            var categoryClass = quickWin.category.toLowerCase().replace(/\s+/g, '');
-            
-            var cardHtml = '<div class="quick-win-item">' +
-                '<div class="quick-win-header">' +
-                    '<span class="category-badge ' + categoryClass + '">' + escapeHtml(quickWin.category) + '</span>' +
-                    '<span class="time-estimate">' + escapeHtml(quickWin.time_estimate) + '</span>' +
-                '</div>' +
-                '<h4>' + escapeHtml(quickWin.action) + '</h4>' +
-                '<p><strong><?php _e("Impact:", "rayvitals"); ?></strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
-                '<p><strong><?php _e("Revenue:", "rayvitals"); ?></strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
-                '<details>' +
-                    '<summary><?php _e("Implementation Steps", "rayvitals"); ?></summary>' +
-                    '<div class="implementation-content">' +
-                        '<p>' + escapeHtml(quickWin.implementation) + '</p>' +
-                        '<p><strong><?php _e("How to verify:", "rayvitals"); ?></strong> ' + escapeHtml(quickWin.verification) + '</p>' +
-                    '</div>' +
-                '</details>' +
-            '</div>';
-            
-            $('#quick-wins-list').append(cardHtml);
-        });
-        
-        // Show modal
-        jQuery('#quick-wins-modal').fadeIn();
-    }
+    alert('Quick Wins feature temporarily disabled for debugging');
+}
 </script>
