@@ -472,6 +472,19 @@ class RayVitals_Shortcodes {
      */
     private function check_rate_limit() {
         $ip = $_SERVER['REMOTE_ADDR'];
+        
+        // Skip rate limiting for local development environments
+        $local_ips = ['127.0.0.1', '::1', 'localhost'];
+        $site_url = get_site_url();
+        
+        // Check if this is a local development environment
+        if (in_array($ip, $local_ips) || 
+            strpos($site_url, 'localhost') !== false || 
+            strpos($site_url, '.local') !== false ||
+            strpos($site_url, '127.0.0.1') !== false) {
+            return true; // No rate limiting for local development
+        }
+        
         $transient_key = 'rayvitals_rate_' . md5($ip);
         
         $attempts = get_transient($transient_key);

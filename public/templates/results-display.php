@@ -206,9 +206,6 @@ function get_score_label($score) {
                     <div class="score"><?php echo esc_html($overall_score); ?> <span class="out-of"><?php _e('out of 100', 'rayvitals'); ?></span></div>
                     <div class="vs-last-scan"><?php _e('vs last scan', 'rayvitals'); ?></div>
                     <div class="performance-label"><?php echo get_score_label($overall_score); ?></div>
-                    <?php if ($overall_percentile): ?>
-                    <div class="percentile-context"><?php echo esc_html($overall_percentile); ?></div>
-                    <?php endif; ?>
                 </div>
             </div>
             <div class="performance-breakdown">
@@ -219,6 +216,11 @@ function get_score_label($score) {
                     </div>
                     <span class="percentage">85%</span>
                 </div>
+                <?php if ($overall_percentile): ?>
+                <div class="overall-benchmarking">
+                    <?php echo esc_html($overall_percentile); ?>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
