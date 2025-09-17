@@ -245,8 +245,8 @@ function get_dynamic_description($score, $category_key) {
                     }
                     ?>
                     <?php
-                    // Quick Wins button integrated into AI Summary card - TEMPORARILY DISABLED
-                    if (false && !empty($detailed_results['quick_wins'])): ?>
+                    // Quick Wins button integrated into AI Summary card
+                    if (!empty($detailed_results['quick_wins'])): ?>
                         <div class="quick-wins-section" style="margin-top: 1rem;">
                             <button class="quick-wins-button" onclick="openQuickWinsModal()">
                                 <svg class="icon-white" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -255,8 +255,10 @@ function get_dynamic_description($score, $category_key) {
                                 <span><?php _e('Quick Wins', 'rayvitals'); ?></span>
                                 <small><?php echo sprintf(__('%d actionable improvements', 'rayvitals'), count($detailed_results['quick_wins'])); ?></small>
                             </button>
-                            <!-- Hidden data container for Quick Wins - TEMPORARILY DISABLED -->
-                            <script type="application/json" id="quick-wins-data">[]</script>
+                            <!-- Hidden data container for Quick Wins -->
+                            <script type="application/json" id="quick-wins-data">
+                                <?php echo json_encode($detailed_results['quick_wins'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>
+                            </script>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -488,7 +490,24 @@ function get_dynamic_description($score, $category_key) {
     </div>
 </div>
 
-<!-- Quick Wins Modal - TEMPORARILY REMOVED FOR DEBUGGING -->
+<!-- Quick Wins Modal -->
+<div class="rayvitals-modal" id="quick-wins-modal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title"><?php _e('Quick Wins - High Impact Improvements', 'rayvitals'); ?></h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="quick-wins-intro">
+                <p><?php _e('Focus on these high-impact, low-effort improvements to see immediate results for your website.', 'rayvitals'); ?></p>
+            </div>
+            <div class="quick-wins-grid" id="quick-wins-list">
+                <!-- Quick wins will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
 // Add modal and interactive functionality
@@ -584,8 +603,64 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Quick Wins Modal functionality - COMPLETELY DISABLED FOR DEBUGGING
+// Quick Wins Modal functionality
 function openQuickWinsModal() {
-    alert('Quick Wins temporarily disabled');
+    try {
+        // Get quick wins data from the JSON container
+        var dataContainer = document.getElementById('quick-wins-data');
+        if (!dataContainer) {
+            console.error('Quick wins data container not found');
+            return;
+        }
+        
+        var quickWinsData = JSON.parse(dataContainer.textContent);
+        if (!quickWinsData || quickWinsData.length === 0) {
+            console.warn('No quick wins data available');
+            return;
+        }
+        
+        // Clear previous content
+        var quickWinsList = document.getElementById('quick-wins-list');
+        if (!quickWinsList) {
+            console.error('Quick wins list container not found');
+            return;
+        }
+        quickWinsList.innerHTML = '';
+        
+        // Populate quick wins
+        quickWinsData.forEach(function(quickWin) {
+            var quickWinCard = document.createElement('div');
+            quickWinCard.className = 'quick-win-card';
+            
+            quickWinCard.innerHTML = 
+                '<div class="quick-win-header">' +
+                    '<h4 class="quick-win-category">' + escapeHtml(quickWin.category || 'Improvement') + '</h4>' +
+                    '<span class="quick-win-time">' + escapeHtml(quickWin.time_estimate || 'N/A') + '</span>' +
+                '</div>' +
+                '<div class="quick-win-action">' +
+                    '<p>' + escapeHtml(quickWin.action || 'No action specified') + '</p>' +
+                '</div>' +
+                '<div class="quick-win-details">' +
+                    '<div class="quick-win-difficulty">' +
+                        '<strong>Difficulty:</strong> ' + escapeHtml(quickWin.difficulty || 'Unknown') +
+                    '</div>' +
+                    '<div class="quick-win-impact">' +
+                        '<strong>Business Impact:</strong> ' + escapeHtml(quickWin.business_impact || 'Not specified') +
+                    '</div>' +
+                    (quickWin.revenue_impact ? 
+                        '<div class="quick-win-revenue">' +
+                            '<strong>Revenue Impact:</strong> ' + escapeHtml(quickWin.revenue_impact) +
+                        '</div>' : '') +
+                '</div>';
+            
+            quickWinsList.appendChild(quickWinCard);
+        });
+        
+        // Show the modal
+        jQuery('#quick-wins-modal').fadeIn();
+        
+    } catch (error) {
+        console.error('Error opening quick wins modal:', error);
+    }
 }
 </script>

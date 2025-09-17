@@ -1380,6 +1380,77 @@ h3.card-title {
     gap: 1rem;
 }
 
+.quick-win-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.quick-win-card:hover {
+    border-color: #10b981;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.quick-win-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.quick-win-category {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+}
+
+.quick-win-time {
+    background: #e0f2fe;
+    color: #0277bd;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.quick-win-action {
+    margin-bottom: 1rem;
+}
+
+.quick-win-action p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #374151;
+    line-height: 1.5;
+}
+
+.quick-win-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.quick-win-details > div {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.quick-win-details strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.quick-win-revenue {
+    color: #059669 !important;
+    background: #ecfdf5;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border-left: 3px solid #10b981;
+}
+
 .quick-win-item {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
