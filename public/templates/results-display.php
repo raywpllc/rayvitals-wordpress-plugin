@@ -605,7 +605,7 @@ function openQuickWinsModal() {
         var quickWinsData = <?php echo json_encode($detailed_results['quick_wins'] ?? []); ?>;
         
         if (!quickWinsData || quickWinsData.length === 0) {
-            alert('<?php _e('No quick wins available for this audit.', 'rayvitals'); ?>');
+            alert('<?php _e("No quick wins available for this audit.", "rayvitals"); ?>');
             return;
         }
         
@@ -622,13 +622,13 @@ function openQuickWinsModal() {
                     '<span class="time-estimate">' + escapeHtml(quickWin.time_estimate) + '</span>' +
                 '</div>' +
                 '<h4>' + escapeHtml(quickWin.action) + '</h4>' +
-                '<p><strong><?php _e('Impact:', 'rayvitals'); ?></strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
-                '<p><strong><?php _e('Revenue:', 'rayvitals'); ?></strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
+                '<p><strong><?php _e("Impact:", "rayvitals"); ?></strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
+                '<p><strong><?php _e("Revenue:", "rayvitals"); ?></strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
                 '<details>' +
-                    '<summary><?php _e('Implementation Steps', 'rayvitals'); ?></summary>' +
+                    '<summary><?php _e("Implementation Steps", "rayvitals"); ?></summary>' +
                     '<div class="implementation-content">' +
                         '<p>' + escapeHtml(quickWin.implementation) + '</p>' +
-                        '<p><strong><?php _e('How to verify:', 'rayvitals'); ?></strong> ' + escapeHtml(quickWin.verification) + '</p>' +
+                        '<p><strong><?php _e("How to verify:", "rayvitals"); ?></strong> ' + escapeHtml(quickWin.verification) + '</p>' +
                     '</div>' +
                 '</details>' +
             '</div>';
