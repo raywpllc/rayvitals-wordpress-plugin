@@ -817,7 +817,7 @@ h3.card-title {
     border-radius: 6px;
     font-size: 0.8rem;
     font-weight: 500;
-    margin-top: 0.75rem;
+    margin: 0.75rem 1.5rem 0 1.5rem;
     text-align: center;
 }
 
