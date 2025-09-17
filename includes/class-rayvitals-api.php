@@ -65,18 +65,38 @@ class RayVitals_API {
             $args['body'] = wp_json_encode($data);
         }
         
+        // Debug logging
+        error_log('RayVitals API Request: ' . $method . ' ' . $url);
+        error_log('RayVitals API Args: ' . wp_json_encode($args));
+        
         $response = wp_remote_request($url, $args);
         
         if (is_wp_error($response)) {
+            error_log('RayVitals API WP Error: ' . $response->get_error_message());
             return $response;
         }
         
         $response_code = wp_remote_retrieve_response_code($response);
         $response_body = wp_remote_retrieve_body($response);
+        $response_headers = wp_remote_retrieve_headers($response);
+        
+        // Debug logging
+        error_log('RayVitals API Response Code: ' . $response_code);
+        error_log('RayVitals API Response Body: ' . $response_body);
+        error_log('RayVitals API Response Headers: ' . wp_json_encode($response_headers));
+        
         $response_data = json_decode($response_body, true);
         
         if ($response_code >= 400) {
-            $error_message = isset($response_data['detail']) ? $response_data['detail'] : 'API request failed';
+            $error_message = 'API request failed';
+            
+            if (isset($response_data['detail'])) {
+                $error_message = $response_data['detail'];
+            } elseif (!empty($response_body)) {
+                $error_message = 'API Error: ' . $response_body;
+            }
+            
+            error_log('RayVitals API Error: ' . $error_message . ' (Status: ' . $response_code . ')');
             return new WP_Error('api_error', $error_message, array('status' => $response_code));
         }
         

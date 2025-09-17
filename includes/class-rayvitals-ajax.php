@@ -51,13 +51,31 @@ class RayVitals_Ajax {
             wp_send_json_error(__('Please provide a URL', 'rayvitals'));
         }
         
+        // Debug logging
+        error_log('RayVitals: Starting audit for URL: ' . $url);
+        
         $api = new RayVitals_API();
         $response = $api->start_audit($url);
         
         if (is_wp_error($response)) {
-            wp_send_json_error($response->get_error_message());
+            $error_message = $response->get_error_message();
+            $error_data = $response->get_error_data();
+            
+            error_log('RayVitals: Audit start failed: ' . $error_message);
+            if ($error_data) {
+                error_log('RayVitals: Error data: ' . wp_json_encode($error_data));
+            }
+            
+            // Provide more detailed error message to user
+            $user_message = $error_message;
+            if (isset($error_data['status'])) {
+                $user_message .= ' (HTTP ' . $error_data['status'] . ')';
+            }
+            
+            wp_send_json_error($user_message);
         }
         
+        error_log('RayVitals: Audit started successfully: ' . wp_json_encode($response));
         wp_send_json_success($response);
     }
     
