@@ -50,6 +50,66 @@ function get_score_label($score) {
     if ($score >= 60) return __('Needs Work', 'rayvitals');
     return __('Poor', 'rayvitals');
 }
+
+// Function to get dynamic description based on score and category
+function get_dynamic_description($score, $category_key) {
+    $grade = get_score_grade($score);
+    
+    switch ($category_key) {
+        case 'security':
+            switch ($grade) {
+                case 'A': return __('Excellent security with comprehensive protection measures', 'rayvitals');
+                case 'B': return __('Good security with minor improvements recommended', 'rayvitals');
+                case 'C': return __('Moderate security with some vulnerabilities to address', 'rayvitals');
+                case 'D': return __('Poor security with significant risks that need attention', 'rayvitals');
+                case 'F': return __('Critical security vulnerabilities requiring immediate action', 'rayvitals');
+            }
+            break;
+            
+        case 'performance':
+            switch ($grade) {
+                case 'A': return __('Outstanding performance with excellent load times', 'rayvitals');
+                case 'B': return __('Good performance with minor optimization opportunities', 'rayvitals');
+                case 'C': return __('Average performance with room for improvement', 'rayvitals');
+                case 'D': return __('Poor performance causing user experience issues', 'rayvitals');
+                case 'F': return __('Very slow performance severely impacting user experience', 'rayvitals');
+            }
+            break;
+            
+        case 'seo':
+            switch ($grade) {
+                case 'A': return __('Excellent SEO optimization for strong search visibility', 'rayvitals');
+                case 'B': return __('Good SEO foundation with minor enhancements needed', 'rayvitals');
+                case 'C': return __('Basic SEO setup with several improvement opportunities', 'rayvitals');
+                case 'D': return __('Poor SEO implementation limiting search visibility', 'rayvitals');
+                case 'F': return __('Critical SEO issues severely hurting search rankings', 'rayvitals');
+            }
+            break;
+            
+        case 'accessibility':
+            switch ($grade) {
+                case 'A': return __('Excellent accessibility ensuring inclusive user experience', 'rayvitals');
+                case 'B': return __('Good accessibility with minor barriers to address', 'rayvitals');
+                case 'C': return __('Basic accessibility with several improvements needed', 'rayvitals');
+                case 'D': return __('Poor accessibility creating barriers for many users', 'rayvitals');
+                case 'F': return __('Critical accessibility issues preventing inclusive access', 'rayvitals');
+            }
+            break;
+            
+        case 'ux':
+            switch ($grade) {
+                case 'A': return __('Exceptional user experience with intuitive design', 'rayvitals');
+                case 'B': return __('Good user experience with minor enhancements possible', 'rayvitals');
+                case 'C': return __('Average user experience with room for improvement', 'rayvitals');
+                case 'D': return __('Poor user experience causing friction and confusion', 'rayvitals');
+                case 'F': return __('Very poor user experience driving users away', 'rayvitals');
+            }
+            break;
+    }
+    
+    // Fallback
+    return __('Analysis complete - see details for specific recommendations', 'rayvitals');
+}
 ?>
 
 <div class="rayvitals-results-container">
@@ -223,31 +283,26 @@ function get_score_label($score) {
         $categories = array(
             'security' => array(
                 'title' => __('Security', 'rayvitals'),
-                'description' => __('SSL certificate valid, but missing security headers', 'rayvitals'),
                 'score_key' => 'security_score',
                 'icon' => 'shield'
             ),
             'performance' => array(
                 'title' => __('Speed', 'rayvitals'),
-                'description' => __('Excellent load times with room for image optimization', 'rayvitals'),
                 'score_key' => 'performance_score',
                 'icon' => 'zap'
             ),
             'seo' => array(
                 'title' => __('SEO', 'rayvitals'),
-                'description' => __('Strong foundation with some technical improvements needed', 'rayvitals'),
                 'score_key' => 'seo_score',
                 'icon' => 'search'
             ),
             'accessibility' => array(
                 'title' => __('Accessibility', 'rayvitals'),
-                'description' => __('Good compliance with room for inclusive design improvements', 'rayvitals'),
                 'score_key' => 'accessibility_score',
                 'icon' => 'eye'
             ),
             'ux' => array(
                 'title' => __('User Experience', 'rayvitals'),
-                'description' => __('Strong mobile experience with minor navigation enhancements', 'rayvitals'),
                 'score_key' => 'ux_score',
                 'icon' => 'users'
             )
@@ -313,7 +368,7 @@ function get_score_label($score) {
                 <?php endif; ?>
                 
                 <div class="card-description">
-                    <?php echo esc_html($category['description']); ?>
+                    <?php echo esc_html(get_dynamic_description($category_score, $category_key)); ?>
                 </div>
                 
                 <!-- Hidden data for modal -->
