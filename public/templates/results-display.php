@@ -255,6 +255,8 @@ function get_dynamic_description($score, $category_key) {
                                 <span><?php _e('Quick Wins', 'rayvitals'); ?></span>
                                 <small><?php echo sprintf(__('%d actionable improvements', 'rayvitals'), count($detailed_results['quick_wins'])); ?></small>
                             </button>
+                            <!-- Hidden data container for Quick Wins -->
+                            <script type="application/json" id="quick-wins-data"><?php echo json_encode($detailed_results['quick_wins'] ?? []); ?></script>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -487,7 +489,14 @@ function get_dynamic_description($score, $category_key) {
 </div>
 
 <!-- Quick Wins Modal -->
-<div class="rayvitals-modal" id="quick-wins-modal" style="display: none;">
+<div class="rayvitals-modal" id="quick-wins-modal" style="display: none;" 
+     data-labels='<?php echo json_encode([
+         "impact" => __("Impact:", "rayvitals"),
+         "revenue" => __("Revenue:", "rayvitals"), 
+         "implementation" => __("Implementation Steps", "rayvitals"),
+         "verify" => __("How to verify:", "rayvitals"),
+         "no_quick_wins" => __("No quick wins available for this audit.", "rayvitals")
+     ]); ?>'>
     <div class="modal-overlay"></div>
     <div class="modal-content">
         <div class="modal-header">
@@ -599,8 +608,56 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Quick Wins Modal functionality (temporarily disabled for debugging)
+// Quick Wins Modal functionality (safe implementation)
 function openQuickWinsModal() {
-    alert('Quick Wins feature temporarily disabled for debugging');
+    var $ = jQuery;
+    
+    // Get data from hidden script tag
+    var quickWinsDataElement = document.getElementById('quick-wins-data');
+    if (!quickWinsDataElement) {
+        alert('No quick wins data available.');
+        return;
+    }
+    
+    // Get labels from modal data attribute
+    var modal = document.getElementById('quick-wins-modal');
+    var labels = JSON.parse(modal.getAttribute('data-labels'));
+    
+    var quickWinsData = JSON.parse(quickWinsDataElement.textContent);
+    
+    if (!quickWinsData || quickWinsData.length === 0) {
+        alert(labels.no_quick_wins);
+        return;
+    }
+    
+    // Clear previous content
+    $('#quick-wins-list').empty();
+    
+    // Populate quick wins
+    quickWinsData.forEach(function(quickWin) {
+        var categoryClass = quickWin.category.toLowerCase().replace(/\s+/g, '');
+        
+        var cardHtml = '<div class="quick-win-item">' +
+            '<div class="quick-win-header">' +
+                '<span class="category-badge ' + categoryClass + '">' + escapeHtml(quickWin.category) + '</span>' +
+                '<span class="time-estimate">' + escapeHtml(quickWin.time_estimate) + '</span>' +
+            '</div>' +
+            '<h4>' + escapeHtml(quickWin.action) + '</h4>' +
+            '<p><strong>' + labels.impact + '</strong> ' + escapeHtml(quickWin.business_impact) + '</p>' +
+            '<p><strong>' + labels.revenue + '</strong> ' + escapeHtml(quickWin.revenue_impact) + '</p>' +
+            '<details>' +
+                '<summary>' + labels.implementation + '</summary>' +
+                '<div class="implementation-content">' +
+                    '<p>' + escapeHtml(quickWin.implementation) + '</p>' +
+                    '<p><strong>' + labels.verify + '</strong> ' + escapeHtml(quickWin.verification) + '</p>' +
+                '</div>' +
+            '</details>' +
+        '</div>';
+        
+        $('#quick-wins-list').append(cardHtml);
+    });
+    
+    // Show modal
+    $('#quick-wins-modal').fadeIn();
 }
 </script>
