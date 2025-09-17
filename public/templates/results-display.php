@@ -246,19 +246,21 @@ function get_dynamic_description($score, $category_key) {
                     ?>
                 </div>
             </div>
-        <?php endif; ?>
-
-        <!-- Quick Wins Section -->
-        <?php if (!empty($detailed_results['quick_wins'])): ?>
-        <div class="quick-wins-section">
-            <button class="quick-wins-button" onclick="openQuickWinsModal()">
-                <svg class="icon-white" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-                <span><?php _e('Quick Wins', 'rayvitals'); ?></span>
-                <small><?php echo sprintf(__('%d actionable improvements', 'rayvitals'), count($detailed_results['quick_wins'])); ?></small>
-            </button>
-        </div>
+                    <?php
+                    // Quick Wins button integrated into AI Summary card
+                    if (!empty($detailed_results['quick_wins'])): ?>
+                        <div class="quick-wins-section" style="margin-top: 1rem;">
+                            <button class="quick-wins-button" onclick="openQuickWinsModal()">
+                                <svg class="icon-white" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <span><?php _e('Quick Wins', 'rayvitals'); ?></span>
+                                <small><?php echo sprintf(__('%d actionable improvements', 'rayvitals'), count($detailed_results['quick_wins'])); ?></small>
+                            </button>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
         <?php endif; ?>
 
         <!-- Overall Grade -->
@@ -574,7 +576,7 @@ jQuery(document).ready(function($) {
         }
     });
     
-    // Helper function to escape HTML
+    // Keep escapeHtml as a local function for other modals
     function escapeHtml(text) {
         var map = {
             '&': '&amp;',
@@ -585,12 +587,26 @@ jQuery(document).ready(function($) {
         };
         return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     }
-    
-    // Quick Wins Modal functionality
-    window.openQuickWinsModal = function() {
+});
+
+// Global helper function for Quick Wins
+function escapeHtml(text) {
+    var map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+// Quick Wins Modal functionality (outside jQuery for global access)
+function openQuickWinsModal() {
+        var $ = jQuery;
         var quickWinsData = <?php echo json_encode($detailed_results['quick_wins'] ?? []); ?>;
         
-        if (quickWinsData.length === 0) {
+        if (!quickWinsData || quickWinsData.length === 0) {
             alert('<?php _e('No quick wins available for this audit.', 'rayvitals'); ?>');
             return;
         }
@@ -638,7 +654,6 @@ jQuery(document).ready(function($) {
         });
         
         // Show modal
-        $('#quick-wins-modal').fadeIn();
-    };
-});
+        jQuery('#quick-wins-modal').fadeIn();
+    }
 </script>
