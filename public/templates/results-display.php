@@ -255,8 +255,8 @@ function get_dynamic_description($score, $category_key) {
                                 <span><?php _e('Quick Wins', 'rayvitals'); ?></span>
                                 <small><?php echo sprintf(__('%d actionable improvements', 'rayvitals'), count($detailed_results['quick_wins'])); ?></small>
                             </button>
-                            <!-- Hidden data container for Quick Wins -->
-                            <script type="application/json" id="quick-wins-data"><?php echo json_encode($detailed_results['quick_wins'] ?? []); ?></script>
+                            <!-- Hidden data container for Quick Wins - TEMPORARILY DISABLED -->
+                            <script type="application/json" id="quick-wins-data">[]</script>
                         </div>
                     <?php endif; ?>
                 </div>
