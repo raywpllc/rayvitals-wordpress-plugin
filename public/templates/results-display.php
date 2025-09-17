@@ -248,6 +248,19 @@ function get_dynamic_description($score, $category_key) {
             </div>
         <?php endif; ?>
 
+        <!-- Quick Wins Section -->
+        <?php if (!empty($detailed_results['quick_wins'])): ?>
+        <div class="quick-wins-section">
+            <button class="quick-wins-button" onclick="openQuickWinsModal()">
+                <svg class="icon-white" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span><?php _e('Quick Wins', 'rayvitals'); ?></span>
+                <small><?php echo sprintf(__('%d actionable improvements', 'rayvitals'), count($detailed_results['quick_wins'])); ?></small>
+            </button>
+        </div>
+        <?php endif; ?>
+
         <!-- Overall Grade -->
         <div class="overall-grade-card <?php echo get_score_class($overall_score); ?>">
             <div class="card-header">
@@ -473,6 +486,25 @@ function get_dynamic_description($score, $category_key) {
     </div>
 </div>
 
+<!-- Quick Wins Modal -->
+<div class="rayvitals-modal" id="quick-wins-modal" style="display: none;">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title"><?php _e('Quick Wins - High Impact Improvements', 'rayvitals'); ?></h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="quick-wins-intro">
+                <p><?php _e('Focus on these high-impact, low-effort improvements to see immediate results for your website.', 'rayvitals'); ?></p>
+            </div>
+            <div class="quick-wins-grid" id="quick-wins-list">
+                <!-- Quick wins will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 // Add modal and interactive functionality
 jQuery(document).ready(function($) {
@@ -553,5 +585,60 @@ jQuery(document).ready(function($) {
         };
         return text.replace(/[&<>"']/g, function(m) { return map[m]; });
     }
+    
+    // Quick Wins Modal functionality
+    window.openQuickWinsModal = function() {
+        var quickWinsData = <?php echo json_encode($detailed_results['quick_wins'] ?? []); ?>;
+        
+        if (quickWinsData.length === 0) {
+            alert('<?php _e('No quick wins available for this audit.', 'rayvitals'); ?>');
+            return;
+        }
+        
+        // Clear previous content
+        $('#quick-wins-list').empty();
+        
+        // Populate quick wins
+        quickWinsData.forEach(function(quickWin) {
+            var categoryClass = quickWin.category.toLowerCase().replace(/\s+/g, '');
+            
+            var cardHtml = `
+                <div class="quick-win-card">
+                    <div class="quick-win-header">
+                        <span class="quick-win-category ${categoryClass}">${escapeHtml(quickWin.category)}</span>
+                        <div class="quick-win-meta">
+                            <span class="quick-win-time">⏱️ ${escapeHtml(quickWin.time_estimate)}</span>
+                            <span class="quick-win-difficulty">${escapeHtml(quickWin.difficulty)}</span>
+                        </div>
+                    </div>
+                    
+                    <h4 class="quick-win-title">${escapeHtml(quickWin.action)}</h4>
+                    
+                    <div class="quick-win-impact">
+                        <strong><?php _e('Business Impact:', 'rayvitals'); ?></strong> ${escapeHtml(quickWin.business_impact)}
+                    </div>
+                    
+                    <div class="quick-win-revenue">
+                        💰 <strong><?php _e('Revenue Impact:', 'rayvitals'); ?></strong> ${escapeHtml(quickWin.revenue_impact)}
+                    </div>
+                    
+                    <div class="quick-win-implementation">
+                        <div class="quick-win-implementation-title"><?php _e('How to Implement:', 'rayvitals'); ?></div>
+                        <div class="quick-win-implementation-steps">${escapeHtml(quickWin.implementation)}</div>
+                    </div>
+                    
+                    <div class="quick-win-verification">
+                        <div class="quick-win-verification-title"><?php _e('How to Verify:', 'rayvitals'); ?></div>
+                        <div class="quick-win-verification-text">${escapeHtml(quickWin.verification)}</div>
+                    </div>
+                </div>
+            `;
+            
+            $('#quick-wins-list').append(cardHtml);
+        });
+        
+        // Show modal
+        $('#quick-wins-modal').fadeIn();
+    };
 });
 </script>

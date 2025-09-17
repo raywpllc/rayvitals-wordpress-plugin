@@ -1268,4 +1268,214 @@ h3.card-title {
     .ai-recommendations-list {
         padding-left: 1rem;
     }
+    
+    .quick-wins-section {
+        margin: 1rem 0;
+    }
+    
+    .quick-wins-button {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+    
+    .quick-wins-grid {
+        gap: 1rem;
+    }
+    
+    .quick-win-card {
+        padding: 1rem;
+    }
+    
+    .quick-win-meta {
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+    }
+    
+    .quick-win-meta span {
+        font-size: 0.75rem;
+    }
+}
+
+/* Quick Wins Styles */
+.quick-wins-section {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.quick-wins-button {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    font-weight: 600;
+    min-width: 280px;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.quick-wins-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.quick-wins-button svg {
+    flex-shrink: 0;
+}
+
+.quick-wins-button span {
+    font-size: 1.1rem;
+}
+
+.quick-wins-button small {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-weight: 400;
+}
+
+/* Quick Wins Modal */
+.quick-wins-intro {
+    background: #f8fafc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #10b981;
+}
+
+.quick-wins-intro p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.95rem;
+}
+
+.quick-wins-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.quick-win-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.quick-win-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #10b981;
+}
+
+.quick-win-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.quick-win-category {
+    background: #10b981;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.quick-win-category.security { background: #dc2626; }
+.quick-win-category.performance { background: #ea580c; }
+.quick-win-category.seo { background: #7c3aed; }
+.quick-win-category.accessibility { background: #0369a1; }
+.quick-win-category.ux { background: #059669; }
+
+.quick-win-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.quick-win-time,
+.quick-win-difficulty {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.quick-win-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.4;
+}
+
+.quick-win-impact {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.quick-win-revenue {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    border-left: 3px solid #f59e0b;
+}
+
+.quick-win-implementation {
+    background: #f0f9ff;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.quick-win-implementation-title {
+    font-weight: 600;
+    color: #0369a1;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.quick-win-implementation-steps {
+    color: #64748b;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.quick-win-verification {
+    background: #f0fdf4;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border-left: 3px solid #10b981;
+}
+
+.quick-win-verification-title {
+    font-weight: 600;
+    color: #059669;
+    margin-bottom: 0.25rem;
+    font-size: 0.8rem;
+}
+
+.quick-win-verification-text {
+    color: #166534;
+    font-size: 0.8rem;
 }
