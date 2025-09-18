@@ -255,10 +255,6 @@ function get_dynamic_description($score, $category_key) {
                                 <span><?php _e('Quick Wins', 'rayvitals'); ?></span>
                                 <small><?php echo sprintf(__('%d actionable improvements', 'rayvitals'), count($detailed_results['quick_wins'])); ?></small>
                             </button>
-                            <!-- Hidden data container for Quick Wins -->
-                            <script type="application/json" id="quick-wins-data">
-                                <?php echo json_encode($detailed_results['quick_wins'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>
-                            </script>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -503,7 +499,34 @@ function get_dynamic_description($score, $category_key) {
                 <p><?php _e('Focus on these high-impact, low-effort improvements to see immediate results for your website.', 'rayvitals'); ?></p>
             </div>
             <div class="quick-wins-grid" id="quick-wins-list">
-                <!-- Quick wins will be populated by JavaScript -->
+                <?php if (!empty($detailed_results['quick_wins'])): ?>
+                    <?php foreach ($detailed_results['quick_wins'] as $quickwin): ?>
+                        <div class="quick-win-card">
+                            <div class="quick-win-header">
+                                <h4 class="quick-win-category"><?php echo esc_html($quickwin['category'] ?? 'Improvement'); ?></h4>
+                                <span class="quick-win-time"><?php echo esc_html($quickwin['time_estimate'] ?? 'N/A'); ?></span>
+                            </div>
+                            <div class="quick-win-action">
+                                <p><?php echo esc_html($quickwin['action'] ?? __('No action specified', 'rayvitals')); ?></p>
+                            </div>
+                            <div class="quick-win-details">
+                                <div class="quick-win-difficulty">
+                                    <strong><?php _e('Difficulty:', 'rayvitals'); ?></strong> <?php echo esc_html($quickwin['difficulty'] ?? __('Unknown', 'rayvitals')); ?>
+                                </div>
+                                <div class="quick-win-impact">
+                                    <strong><?php _e('Business Impact:', 'rayvitals'); ?></strong> <?php echo esc_html($quickwin['business_impact'] ?? __('Not specified', 'rayvitals')); ?>
+                                </div>
+                                <?php if (!empty($quickwin['revenue_impact'])): ?>
+                                    <div class="quick-win-revenue">
+                                        <strong><?php _e('Revenue Impact:', 'rayvitals'); ?></strong> <?php echo esc_html($quickwin['revenue_impact']); ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p><?php _e('No quick wins available for this audit.', 'rayvitals'); ?></p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -603,71 +626,8 @@ function escapeHtml(text) {
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Quick Wins Modal functionality
+// Quick Wins Modal functionality - Simplified
 function openQuickWinsModal() {
-    try {
-        // Get quick wins data from the JSON container
-        var dataContainer = document.getElementById('quick-wins-data');
-        if (!dataContainer) {
-            console.error('Quick wins data container not found');
-            return;
-        }
-        
-        var quickWinsData = JSON.parse(dataContainer.textContent);
-        if (!quickWinsData || quickWinsData.length === 0) {
-            console.warn('No quick wins data available');
-            return;
-        }
-        
-        // Clear previous content
-        var quickWinsList = document.getElementById('quick-wins-list');
-        if (!quickWinsList) {
-            console.error('Quick wins list container not found');
-            return;
-        }
-        quickWinsList.innerHTML = '';
-        
-        // Populate quick wins
-        quickWinsData.forEach(function(quickWin) {
-            var quickWinCard = document.createElement('div');
-            quickWinCard.className = 'quick-win-card';
-            
-            var categoryHtml = escapeHtml(quickWin.category || 'Improvement');
-            var timeHtml = escapeHtml(quickWin.time_estimate || 'N/A');
-            var actionHtml = escapeHtml(quickWin.action || 'No action specified');
-            var difficultyHtml = escapeHtml(quickWin.difficulty || 'Unknown');
-            var impactHtml = escapeHtml(quickWin.business_impact || 'Not specified');
-            var revenueHtml = quickWin.revenue_impact ? escapeHtml(quickWin.revenue_impact) : '';
-            
-            quickWinCard.innerHTML = 
-                '<div class="quick-win-header">' +
-                    '<h4 class="quick-win-category">' + categoryHtml + '</h4>' +
-                    '<span class="quick-win-time">' + timeHtml + '</span>' +
-                '</div>' +
-                '<div class="quick-win-action">' +
-                    '<p>' + actionHtml + '</p>' +
-                '</div>' +
-                '<div class="quick-win-details">' +
-                    '<div class="quick-win-difficulty">' +
-                        '<strong>Difficulty:</strong> ' + difficultyHtml +
-                    '</div>' +
-                    '<div class="quick-win-impact">' +
-                        '<strong>Business Impact:</strong> ' + impactHtml +
-                    '</div>' +
-                    (revenueHtml ? 
-                        '<div class="quick-win-revenue">' +
-                            '<strong>Revenue Impact:</strong> ' + revenueHtml +
-                        '</div>' : '') +
-                '</div>';
-            
-            quickWinsList.appendChild(quickWinCard);
-        });
-        
-        // Show the modal
-        jQuery('#quick-wins-modal').fadeIn();
-        
-    } catch (error) {
-        console.error('Error opening quick wins modal:', error);
-    }
+    jQuery('#quick-wins-modal').fadeIn();
 }
 </script>
