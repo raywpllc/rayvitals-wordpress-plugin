@@ -632,24 +632,31 @@ function openQuickWinsModal() {
             var quickWinCard = document.createElement('div');
             quickWinCard.className = 'quick-win-card';
             
+            var categoryHtml = escapeHtml(quickWin.category || 'Improvement');
+            var timeHtml = escapeHtml(quickWin.time_estimate || 'N/A');
+            var actionHtml = escapeHtml(quickWin.action || 'No action specified');
+            var difficultyHtml = escapeHtml(quickWin.difficulty || 'Unknown');
+            var impactHtml = escapeHtml(quickWin.business_impact || 'Not specified');
+            var revenueHtml = quickWin.revenue_impact ? escapeHtml(quickWin.revenue_impact) : '';
+            
             quickWinCard.innerHTML = 
                 '<div class="quick-win-header">' +
-                    '<h4 class="quick-win-category">' + escapeHtml(quickWin.category || 'Improvement') + '</h4>' +
-                    '<span class="quick-win-time">' + escapeHtml(quickWin.time_estimate || 'N/A') + '</span>' +
+                    '<h4 class="quick-win-category">' + categoryHtml + '</h4>' +
+                    '<span class="quick-win-time">' + timeHtml + '</span>' +
                 '</div>' +
                 '<div class="quick-win-action">' +
-                    '<p>' + escapeHtml(quickWin.action || 'No action specified') + '</p>' +
+                    '<p>' + actionHtml + '</p>' +
                 '</div>' +
                 '<div class="quick-win-details">' +
                     '<div class="quick-win-difficulty">' +
-                        '<strong>Difficulty:</strong> ' + escapeHtml(quickWin.difficulty || 'Unknown') +
+                        '<strong>Difficulty:</strong> ' + difficultyHtml +
                     '</div>' +
                     '<div class="quick-win-impact">' +
-                        '<strong>Business Impact:</strong> ' + escapeHtml(quickWin.business_impact || 'Not specified') +
+                        '<strong>Business Impact:</strong> ' + impactHtml +
                     '</div>' +
-                    (quickWin.revenue_impact ? 
+                    (revenueHtml ? 
                         '<div class="quick-win-revenue">' +
-                            '<strong>Revenue Impact:</strong> ' + escapeHtml(quickWin.revenue_impact) +
+                            '<strong>Revenue Impact:</strong> ' + revenueHtml +
                         '</div>' : '') +
                 '</div>';
             
